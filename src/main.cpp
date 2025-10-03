@@ -9,22 +9,14 @@ void setup() {
   setupPins();
   MX_DMA_Init();
   MX_ADC1_Init();
-  
+  delay(1000);
   serial.println("Setup Complete");
 }
 
 void loop() {  
   isPowerBtnPressed();
-
+  isCurrentSafe();
+  //isBatteryVoltageSafe();
   
-    // قراءة القيم أصبحت تلقائية عبر DMA في مصفوفة adcValues
-  serial.print("Throttle: ");
-  serial.print(adcValues[0]);
-  serial.print("  Current: ");
-  serial.print(getCurrentAmps());
-  serial.print("  Battery: ");
-  serial.print(getBatteryVoltage());
-  serial.print("  temperture: ");
-  serial.println(getInternalTemperature());
   
 }

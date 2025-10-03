@@ -35,21 +35,34 @@ float getCurrentAmps(void)
     return current;
 }
 
-void currentProtect(void)
-{
-    float currentA = getCurrentAmps();
-    if (currentA > OVERCURRENT_LIMIT)
-    {
-        //stopAllMotorOutputs();  // ← تطفئ المحرك تمامًا
-        //serial.println("⚠️  Overcurrent detected! Current = %.2f A -> Stopping motor!\r\n", currentA);
-        
-        powerOff();
-    }    
-}
-
 float getInternalTemperature(void)
 {
-    float Vsense = (adcValues[3] / 4095.0f) * 3.3f;
-    float temperature = ((1.43f - Vsense) / 0.0043f) + 25.0f;
-    return temperature;
+  float Vsense = (adcValues[3] / 4095.0f) * 3.3f;
+  float temperature = ((1.43f - Vsense) / 0.0043f) + 25.0f;
+  return temperature;
 }
+
+void isCurrentSafe(void)
+{
+  float current = getCurrentAmps();
+  if (current > OVERCURRENT_LIMIT)
+  {
+    serial.print("Current is not safe: ");
+    serial.println(current);
+        
+    powerOff();
+  }    
+}
+
+void isBatteryVoltageSafe(void)
+{
+  float batteryVoltage = getBatteryVoltage();
+  if (batteryVoltage < MIN_BATTERY_VOL || batteryVoltage > MAX_BATTERY_VOL)
+  {
+    serial.print("Battery voltage is not safe: ");
+    serial.println(batteryVoltage);
+    powerOff();
+  }  
+}
+
+

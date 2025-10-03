@@ -5,6 +5,9 @@
 #define CURRENT_OFFSET 0.95f 
 #define OVERCURRENT_LIMIT  15.0f
 
+#define MIN_BATTERY_VOL 30.1
+#define MAX_BATTERY_VOL 41.9
+
 
 #define FRONT_LED_PIN PC13
 

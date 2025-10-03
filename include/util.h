@@ -7,5 +7,6 @@
 
 float getBatteryVoltage(void);
 float getCurrentAmps(void);
-void currentProtect(void);
 float getInternalTemperature(void);
+void isCurrentSafe(void);
+void isBatteryVoltageSafe(void);
