@@ -12,6 +12,28 @@ void setupPins(void)
   pinMode(SELF_HOLD_PIN, OUTPUT);
   pinMode(FRONT_LED_PIN, OUTPUT);
   pinMode(BUZZER_PIN, OUTPUT);
+
+
+    /** ========== Analog mode ========= **/
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
+ __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOB_CLK_ENABLE();
+  __HAL_RCC_GPIOC_CLK_ENABLE();
+  GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+
+    /*Configure GPIO pin : P */
+  GPIO_InitStruct.Pin = THROTTLE_PIN;
+  HAL_GPIO_Init(THROTTLE_PORT, &GPIO_InitStruct);
+
+    /*Configure GPIO pin : P */
+  GPIO_InitStruct.Pin = BATTERY_V_PIN;
+  HAL_GPIO_Init(BATTERY_V_PORT, &GPIO_InitStruct);
+
+    /*Configure GPIO pin : P */
+  GPIO_InitStruct.Pin = CURRENT_PIN;
+  HAL_GPIO_Init(CURRENT_PORT, &GPIO_InitStruct);
 }
 
 void setupSerial(void) 

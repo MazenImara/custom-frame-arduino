@@ -2,6 +2,9 @@
 
 #define ADC_CHANNEL_COUNT 4  // عدد القنوات
 
+#define CURRENT_OFFSET 0.95f 
+#define OVERCURRENT_LIMIT  15.0f
+
 
 #define FRONT_LED_PIN PC13
 
