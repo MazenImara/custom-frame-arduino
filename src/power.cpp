@@ -1,14 +1,32 @@
 #include "power.h"
 
-#define LONG_PRESS_TIME 1000
+#define LONG_PRESS_TIME 3000
 
 unsigned long pressStartTime = 0;
 bool isPressed = false;
+bool calbirateMode = false;
 
 
 void isPowerBtnPressed(void)
 {
   bool btnState = digitalRead(POWER_BTN_PIN);
+  bool selfHold = digitalRead(SELF_HOLD_PIN);
+
+  if (btnState && !selfHold)
+  {    
+    powerOn();
+  }
+  if (btnState && selfHold)
+  {    
+    while (digitalRead(POWER_BTN_PIN)){}
+    if (!calbirateMode)
+    {
+      powerOff();
+    }else{
+      //triger calpirate
+      tone(BUZZER_PIN, 500, 500);
+    }   
+  }
 
   if (btnState && !isPressed)
   {
@@ -19,7 +37,6 @@ void isPowerBtnPressed(void)
   if (!btnState && isPressed) {
     // تم إفلات الزر قبل أن يكتمل الوقت
     isPressed = false;
-    powerOn();
   }
 
   if (btnState && isPressed) {
@@ -27,7 +44,7 @@ void isPowerBtnPressed(void)
     if (millis() - pressStartTime >= LONG_PRESS_TIME) {
       Serial.println("تم الضغط لمدة 3 ثواني!");
       isPressed = false;  // منع التكرار
-      powerOff();
+      calbirateMode = true;
     }
   }
 }
@@ -42,10 +59,10 @@ void powerOn(void)
 
 void powerOff(void)
 {
-  digitalWrite(SELF_HOLD_PIN, LOW);
-  digitalWrite(FRONT_LED_PIN, LOW);
   serial.println("PowerOff \r\n");
   powerOffMelody();
+  digitalWrite(SELF_HOLD_PIN, LOW);
+  digitalWrite(FRONT_LED_PIN, LOW);
 }
 
 void powerOnMelody(void)

@@ -9,7 +9,6 @@ void setup() {
   setupPins();
   MX_DMA_Init();
   MX_ADC1_Init();
-  delay(1000);
   serial.println("Setup Complete");
 }
 
