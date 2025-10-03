@@ -21,9 +21,6 @@ void setupSerial(void)
 
 void MX_ADC1_Init(void)
 {
-  HAL_Init();
-  SystemClock_Config();
-
   __HAL_RCC_ADC1_CLK_ENABLE();
 
   ADC_ChannelConfTypeDef sConfig = {0};
@@ -54,9 +51,10 @@ void MX_ADC1_Init(void)
   // قناة 3: Battery Voltage (مثلاً PA5 = ADC_CHANNEL_5)
   sConfig.Channel = BATTERY_V_CH;
   sConfig.Rank = ADC_REGULAR_RANK_3;
+  sConfig.SamplingTime = ADC_SAMPLETIME_239CYCLES_5;
   HAL_ADC_ConfigChannel(&hadc1, &sConfig);
 
-  // قناة 4: Temperature (مثلاً PA3 = ADC_CHANNEL_3)
+  // قناة 4: Temperature ( ADC_CHANNEL_16)
   sConfig.Channel = ADC_CHANNEL_16;
   sConfig.Rank = ADC_REGULAR_RANK_4;
   sConfig.SamplingTime = ADC_SAMPLETIME_239CYCLES_5;
@@ -83,27 +81,7 @@ void MX_DMA_Init(void)
   HAL_DMA_Init(&hdma_adc1);
 
   __HAL_LINKDMA(&hadc1, DMA_Handle, hdma_adc1);
-}
-
-void SystemClock_Config(void)
-{
-  RCC_OscInitTypeDef RCC_OscInitStruct = {0};
-  RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
-
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
-  RCC_OscInitStruct.HSEState = RCC_HSE_ON;
-  RCC_OscInitStruct.HSEPredivValue = RCC_HSE_PREDIV_DIV1;
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-  RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL9;
-  HAL_RCC_OscConfig(&RCC_OscInitStruct);
-
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
-  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
-
-  HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2);
+    // تفعيل مقاطعة الـ DMA في NVIC
+  HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
 }
